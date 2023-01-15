@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>ToDo</title>
+		<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+		<meta charset="UTF-8">
+	</head>
+	<body>
+		<h1>Todo</h1>
+		<div>
+			<input type="checkbox" id="fis" name="fis" value="fis">
+			<label for="fis"> use fis</label><br>
+			<input type="checkbox" id="ges" name="ges" value="ges">
+			<label for="ges"> use ges</label><br>
+			<br>
+			<input type="button" id="create" name="create" value="create" onclick="createNewContent()">
+		</div>
+		<hr>
+		<div>
+			<p id="output">
+			</p>
+		</div>
+		<script>
+			const notes = ["C","B","A","G","F","E","D"]
+			const fis = ["A#","G#","F#","D#","C#"]
+			const ges = ["Bb","Ab","Gb","Eb","Db"]
+
+			function createNewContent(){
+				var withFis = document.getElementById('fis').checked
+				var withGes = document.getElementById('ges').checked
+
+				var combined  = [];
+				var combinedFisAndGes = [];
+
+				if(withFis && withGes){
+					var position = Array.from({length: 5}, () => Math.floor(Math.random() * 2));
+					position.forEach( (arraySelector, index) => 
+						{
+							if(arraySelector == 1){
+								combinedFisAndGes.push(fis[index]);
+							}else{
+								combinedFisAndGes.push(ges[index]);
+							}
+						}
+					)
+					combined = notes.concat(combinedFisAndGes);
+				}else if(withFis){
+					combined = notes.concat(fis);
+				}else if(withGes){
+					combined = notes.concat(ges);
+				} 
+
+				var text = combined.sort((a, b) => 0.5 - Math.random()).join('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+
+				var output = document.getElementById('output')
+				output.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + text + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|";
+
+				if(!withGes && !withFis){
+					output.innerHTML = "select Fis, Ges or both";
+				}
+		
+			}
+		</script>
+	</body>
+</html>
