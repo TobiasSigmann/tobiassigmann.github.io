@@ -11,33 +11,47 @@
 			}
 			#output {
 				padding: 0.5em;
-				max-width: 50em;
-				border: solid black;
+				max-width: 45em;
 				overflow:hidden;
+				border: solid black;
+			}
+			#settings{
+				float:left;
+				display: flex;
+				padding: 1em;
+			}
+			#out{
+				overflow: hidden;
+				padding: 1em;
 			}
 		</style>
 	</head>
 	<body>
 		<h1>Exercise</h1>
 		<hr>
-		<div>
-			<div>
-				<input type="radio" id="fis" name="modie" value="fis" checked>
-				<label for="fis">use fis</label><br>
-				<input type="radio" id="ges" name="modie" value="ges">
-				<label for="ges">use ges</label><br>
-				<input type="radio" id="both" name="modie" value="both">
-				<label for="both">use both</label><br>
-			</div>
-			<br>
-			<input type="button" id="create" name="create" value="create" onclick="createNewContent()">
-			<br>
-			<input type="button" id="download" name="download" value="download" onclick="createAndDownload()">
+		<div id="settings">
+			<fieldset>
+				<legend>Settings</legend>
+				<div>
+					<input type="radio" id="fis" name="modie" value="fis" checked>
+					<label for="fis">use fis</label><br>
+					<input type="radio" id="ges" name="modie" value="ges">
+					<label for="ges">use ges</label><br>
+					<input type="radio" id="both" name="modie" value="both">
+					<label for="both">use both</label><br>
+					<br>
+					<input type="button" id="create" name="create" value="recreate" onclick="createNewContent()">
+				</div>
+			</fieldset>
 		</div>
-		<hr>
-		<center>
-			<p id="output"></p>
-		</center>
+		<div id="out">
+			<div>
+				<center>
+					<p id="output"></p>
+				</center>
+				<input type="button" id="download" name="download" value="download" onclick="createAndDownload()">
+			</div>
+		</div>
 		<script>
 			const notes = ["C","B","A","G","F","E","D"]
 			const fis = ["A#","G#","F#","D#","C#"]
@@ -68,7 +82,9 @@
 					combined = notes.concat(fis);
 				}else if(withGes){
 					combined = notes.concat(ges);
-				} 
+				}
+
+
 
 				return combined.sort((a, b) => 0.5 - Math.random()).join('|') + "|";
 			}
