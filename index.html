@@ -1,11 +1,25 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>ToDo</title>
+		<title>Exercise</title>
 		<meta charset="UTF-8">
+		<style>
+			span {
+				padding-left: 2em;
+				padding-right: 2em;
+				float:left
+			}
+			#output {
+				padding: 0.5em;
+				max-width: 50em;
+				border: solid black;
+				overflow:hidden;
+			}
+		</style>
 	</head>
 	<body>
-		<h1>Todo</h1>
+		<h1>Exercise</h1>
+		<hr>
 		<div>
 			<div>
 				<input type="radio" id="fis" name="modie" value="fis" checked>
@@ -21,10 +35,9 @@
 			<input type="button" id="download" name="download" value="download" onclick="createAndDownload()">
 		</div>
 		<hr>
-		<div>
-			<p id="output">
-			</p>
-		</div>
+		<center>
+			<p id="output"></p>
+		</center>
 		<script>
 			const notes = ["C","B","A","G","F","E","D"]
 			const fis = ["A#","G#","F#","D#","C#"]
@@ -57,19 +70,24 @@
 					combined = notes.concat(ges);
 				} 
 
-				return combined.sort((a, b) => 0.5 - Math.random()).join('\t|\t') + "\t|";
+				return combined.sort((a, b) => 0.5 - Math.random()).join('|') + "|";
+			}
+
+			function displayText(){
+				var output = document.getElementById('output')
+				output.innerHTML = "<span>" + text.split("|").join("</span><span>|</span><span>") + "</span>"
 			}
 
 			// Function to download data to a file
 			function createAndDownload(data, filename, type) {
 				if(text == ""){
 					text = createText()
-					var output = document.getElementById('output')
-					output.innerHTML = text
+					displayText()
 				}
+				var data = "####################\n#\tExercice\n####################\n\n\n    " + text.split("|").join("    |    ")
 				var type = "text/plain"
 				var filename = "uebung.txt"
-				var file = new Blob([text], {type: type});
+				var file = new Blob([data], {type: type});
 				if (window.navigator.msSaveOrOpenBlob) // IE10+
 					window.navigator.msSaveOrOpenBlob(file, filename);
 				else { // Others
@@ -88,8 +106,7 @@
 
 			function createNewContent(){
 				text = createText()
-				var output = document.getElementById('output')
-				output.innerHTML = text
+				displayText()
 			}
 
 			createNewContent()
