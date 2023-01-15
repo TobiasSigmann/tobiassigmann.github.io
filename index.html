@@ -2,18 +2,23 @@
 <html>
 	<head>
 		<title>ToDo</title>
-		<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 		<meta charset="UTF-8">
 	</head>
 	<body>
 		<h1>Todo</h1>
 		<div>
-			<input type="checkbox" id="fis" name="fis" value="fis">
-			<label for="fis"> use fis</label><br>
-			<input type="checkbox" id="ges" name="ges" value="ges">
-			<label for="ges"> use ges</label><br>
+			<div>
+				<input type="radio" id="fis" name="modie" value="fis" checked>
+				<label for="fis">use fis</label><br>
+				<input type="radio" id="ges" name="modie" value="ges">
+				<label for="ges">use ges</label><br>
+				<input type="radio" id="both" name="modie" value="both">
+				<label for="both">use both</label><br>
+			</div>
 			<br>
 			<input type="button" id="create" name="create" value="create" onclick="createNewContent()">
+			<br>
+			<input type="button" id="download" name="download" value="download" onclick="createAndDownload()">
 		</div>
 		<hr>
 		<div>
@@ -24,15 +29,17 @@
 			const notes = ["C","B","A","G","F","E","D"]
 			const fis = ["A#","G#","F#","D#","C#"]
 			const ges = ["Bb","Ab","Gb","Eb","Db"]
+			var text = ""
 
-			function createNewContent(){
+			function createText() {
 				var withFis = document.getElementById('fis').checked
 				var withGes = document.getElementById('ges').checked
+				var withboth = document.getElementById('both').checked
 
 				var combined  = [];
 				var combinedFisAndGes = [];
 
-				if(withFis && withGes){
+				if(withboth){
 					var position = Array.from({length: 5}, () => Math.floor(Math.random() * 2));
 					position.forEach( (arraySelector, index) => 
 						{
@@ -50,16 +57,42 @@
 					combined = notes.concat(ges);
 				} 
 
-				var text = combined.sort((a, b) => 0.5 - Math.random()).join('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
-
-				var output = document.getElementById('output')
-				output.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + text + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|";
-
-				if(!withGes && !withFis){
-					output.innerHTML = "select Fis, Ges or both";
-				}
-		
+				return combined.sort((a, b) => 0.5 - Math.random()).join('\t|\t') + "\t|";
 			}
+
+			// Function to download data to a file
+			function createAndDownload(data, filename, type) {
+				if(text == ""){
+					text = createText()
+					var output = document.getElementById('output')
+					output.innerHTML = text
+				}
+				var type = "text/plain"
+				var filename = "uebung.txt"
+				var file = new Blob([text], {type: type});
+				if (window.navigator.msSaveOrOpenBlob) // IE10+
+					window.navigator.msSaveOrOpenBlob(file, filename);
+				else { // Others
+					var a = document.createElement("a"),
+							url = URL.createObjectURL(file);
+					a.href = url;
+					a.download = filename;
+					document.body.appendChild(a);
+					a.click();
+					setTimeout(function() {
+						document.body.removeChild(a);
+						window.URL.revokeObjectURL(url);  
+					}, 0); 
+				}
+			}
+
+			function createNewContent(){
+				text = createText()
+				var output = document.getElementById('output')
+				output.innerHTML = text
+			}
+
+			createNewContent()
 		</script>
 	</body>
 </html>
