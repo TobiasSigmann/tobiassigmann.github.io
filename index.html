@@ -7,27 +7,23 @@
 			.line{
 				display:inline;
 				white-space:nowrap;
-			}
-
+gi			}
 			.line span {
 				display: inline-block;
-				width:10%;
+				width:12%;
 			}
-
 			.line span:first-child {
-				width:5%;
+				width:6%;
 				text-align: left;
 			}
-
 			.line span:last-child {
-				width:5%;
+				width:6%;
 				text-align: right;
 			}
-
 			#outputElement {
+				padding: 1em;
 				max-width: 45em;
 				border: solid black;
-				padding: 1em;
 			}
 			#settings{
 				float:left;
@@ -38,14 +34,35 @@
 				overflow: hidden;
 				padding: 1em;
 			}
+			h3{
+				text-align: left;
+				margin: 0em;
+				
+			}
 
-			.together {
-				display: inline-block
+			@media print {
+				body * {
+					visibility: hidden;
+				}
+				#settings{
+					float:none;
+					position: fixed;
+				}
+				.section-to-print, .section-to-print * {
+					visibility: visible;
+				}
+				#outputElement{
+					width: 80%;
+				}
+				#out{
+				overflow: none;
+				padding: 1em;
+				}
 			}
 		</style>
 	</head>
 	<body>
-		<h1>Exercise</h1>
+		<h1 class="section-to-print">Exercise</h1>
 		<hr>
 		<div id="settings">
 			<fieldset>
@@ -71,7 +88,7 @@
 		</div>
 		<div id="out">
 			<center>
-				<div id="output"></div>
+				<div id="output" class="section-to-print"></div>
 			</center>
 		</div>
 		<script>
@@ -138,14 +155,14 @@
 				const postText = "</span><span>|</span></p>"
 
 				var textToShow = ""
-				scrambeldNodes.forEach( exercice => {
+				scrambeldNodes.forEach( (exercice, idx) => {
 					htmlExcercice = ""
 					sliceIntoChunks(exercice,4).forEach( parts => {
 						htmlExcercice += preText + parts.join("</span><span>|</span><span>") + postText
 					})
 					
 					
-					textToShow += "<div id=\"outputElement\">"+ htmlExcercice + "</div><br><br>"	
+					textToShow += "<div id=\"outputElement\"><h3>Exercise " + (idx+1) + ":</h3><br>" + htmlExcercice + "</div><br>"	
 				})
 
 				output.innerHTML = textToShow
@@ -163,7 +180,7 @@
 					const firstHalf = element.splice(0, middleIndex);   
 					const secondHalf = element.splice(-middleIndex);
 
-					var t = "Excercice "+  (idx+1) + ":\n" + preText+ firstHalf.join("    |    ") + postText + "\n" + preText+ secondHalf.join("    |    ") + postText
+					var t = "Exercise "+  (idx+1) + ":\n" + preText+ firstHalf.join("    |    ") + postText + "\n" + preText+ secondHalf.join("    |    ") + postText
 					data += t + "\n\n"	
 				})
 				return data
