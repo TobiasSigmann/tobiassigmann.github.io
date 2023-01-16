@@ -4,16 +4,30 @@
 		<title>Exercise</title>
 		<meta charset="UTF-8">
 		<style>
-			span {
-				padding-left: 2em;
-				padding-right: 2em;
-				float:left
+			.line{
+				display:inline;
+				white-space:nowrap;
 			}
+
+			.line span {
+				display: inline-block;
+				width:10%;
+			}
+
+			.line span:first-child {
+				width:5%;
+				text-align: left;
+			}
+
+			.line span:last-child {
+				width:5%;
+				text-align: right;
+			}
+
 			#outputElement {
-				padding: 0.5em;
 				max-width: 45em;
-				overflow:hidden;
 				border: solid black;
+				padding: 1em;
 			}
 			#settings{
 				float:left;
@@ -44,7 +58,7 @@
 					<input type="radio" id="both" name="modie" value="both">
 					<label for="both">use both</label><br>
 					<br>
-					<input type="number" id="amount" name="amount" value="6" min="1">
+					<input type="number" id="amount" name="amount" value="1" min="1" style="width:4em">
 					<label for="amount">number of lines</label><br>
 					<input type="checkbox" id="recreate" name="recreate">
 					<label for="recreate">recreate every time</label><br>
@@ -56,7 +70,6 @@
 			</fieldset>
 		</div>
 		<div id="out">
-			
 			<center>
 				<div id="output"></div>
 			</center>
@@ -65,7 +78,7 @@
 			const notes = ["C","B","A","G","F","E","D"]
 			const fis = ["A#","G#","F#","D#","C#"]
 			const ges = ["Bb","Ab","Gb","Eb","Db"]
-			let text = []
+			var   scrambeldNodes = []
 
 			function createNoteArray(){
 				var withFis = document.getElementById('fis').checked
@@ -96,47 +109,55 @@
 				return combined
 			}
 
-			function createText() {
+			function createRandomNodeArray() {
 				var amount = document.getElementById('amount').value
 				var withRecreate = document.getElementById('recreate').checked
 
 				var combined = createNoteArray()
 
-				text = new Array()
+				scrambeldNodes = []
 				for(var i = 0; i < amount; i++){
 					if(withRecreate) combined = createNoteArray()
-					text.push([...combined].sort((a, b) => 0.5 - Math.random()))
+					scrambeldNodes.push([...combined].sort((a, b) => 0.5 - Math.random()))
 				}
 			}
 
-			function displayText(){
+			function sliceIntoChunks(arr, chunkSize) {
+				const res = [];
+				for (let i = 0; i < arr.length; i += chunkSize) {
+					const chunk = arr.slice(i, i + chunkSize);
+					res.push(chunk);
+				}
+				return res;
+			}
+
+			function createHTMLString(){
 				var output = document.getElementById('output')
 
-				const preText = "<span>|</span><span>"
-				const postText = "</span><span>|</span>"
+				const preText = "<p class=\"line\"><span>|</span><span>"
+				const postText = "</span><span>|</span></p>"
 
 				var textToShow = ""
-				text.forEach( element => {
-					var t = preText + element.join("</span><span>|</span><span>") + postText
-					textToShow += "<div id=\"outputElement\">"+ t + "</div><br><br>"	
+				scrambeldNodes.forEach( exercice => {
+					htmlExcercice = ""
+					sliceIntoChunks(exercice,4).forEach( parts => {
+						htmlExcercice += preText + parts.join("</span><span>|</span><span>") + postText
+					})
+					
+					
+					textToShow += "<div id=\"outputElement\">"+ htmlExcercice + "</div><br><br>"	
 				})
 
 				output.innerHTML = textToShow
 			}
 
-			// Function to download data to a file
-			function createAndDownload(data, filename, type) {
-				if(text.length == 0){
-					createText()
-					displayText()
-				}
-
+			function createTextForFile(){
 				const header = "####################\n#\tExercice\n####################\n\n\n"
 				const preText = "|    "
 				const postText = "    |"
 				var data = header
 
-				text.forEach( (element,idx) => {
+				scrambeldNodes.forEach( (element,idx) => {
 					const middleIndex = Math.ceil(element.length / 2);
 
 					const firstHalf = element.splice(0, middleIndex);   
@@ -145,6 +166,16 @@
 					var t = "Excercice "+  (idx+1) + ":\n" + preText+ firstHalf.join("    |    ") + postText + "\n" + preText+ secondHalf.join("    |    ") + postText
 					data += t + "\n\n"	
 				})
+				return data
+			}
+
+			function createAndDownload(data, filename, type) {
+				if(scrambeldNodes.length == 0){
+					createRandomNodeArray()
+					createHTMLString()
+				}
+
+				var data = createTextForFile()
 
 				var type = "text/plain"
 				var filename = "exercice.txt"
@@ -166,8 +197,8 @@
 			}
 
 			function createNewContent(){
-				createText()
-				displayText()
+				createRandomNodeArray()
+				createHTMLString()
 			}
 
 			createNewContent()
