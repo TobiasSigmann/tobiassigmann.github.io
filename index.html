@@ -46,9 +46,20 @@
 				
 			}
 
+			.dark-mode {
+				background-color: black;
+				color: white;
+			}
+
+			.dark-mode #outputElement{
+				border: solid white;
+			}
+
 			@media print {
 				body * {
 					visibility: hidden;
+					background-color: white;
+					color: black;
 				}
 				#settings{
 					float:none;
@@ -57,13 +68,14 @@
 				.section-to-print, .section-to-print * {
 					visibility: visible;
 				}
-				#outputElement{
+				.section-to-print #outputElement{
 					width: 80%;
 					page-break-inside : avoid;
+					border: solid black;
 				}
-				#out{
-				overflow: none;
-				padding: 1em;
+				.section-to-print #out{
+					overflow: none;
+					padding: 1em;
 				}
 			}
 		</style>
@@ -83,16 +95,16 @@
 					<label for="both">use both</label><br>
 					<br>
 					<label for="amount">amount</label>
-					<input type="number" id="amount" name="amount" value="1" min="1" style="width:3em"><br>
+					<input type="number" id="amount" name="amount" value="1" min="1" max="1000" style="width:4em"><br>
 					
 					<input type="checkbox" id="recreate" name="recreate" disabled>
 					<label for="recreate"> scramble fis and ges</label><br>
 					<br>
-					<input type="button" id="create" class="button" name="create" value="recreate" onclick="createNewContent()">
+					<input type="button" id="create" class="button" name="create" value="recreate" onclick="createNewContent()"><br>
+					<input type="button" id="download" class="button" name="download" value="download as txt" onclick="createAndDownload()"><br>
+					<input type="button" id="download" class="button" name="download" value="print / save as pdf" onclick="window.print()"><br>
 					<br>
-					<input type="button" id="download" class="button" name="download" value="download as txt" onclick="createAndDownload()">
-					<br>
-					<input type="button" id="download" class="button" name="download" value="print / save as pdf" onclick="window.print()">
+					<input type="button" onclick="toggleDarkMode()" class="button" value="Toggle dark mode">
 				</div>
 			</fieldset>
 		</div>
@@ -102,6 +114,11 @@
 			</center>
 		</div>
 		<script>
+			function toggleDarkMode() {
+				var element = document.body;
+				element.classList.toggle("dark-mode");
+			}
+
 			const notes = ["C","B","A","G","F","E","D"]
 			const fis = ["A#","G#","F#","D#","C#"]
 			const ges = ["Bb","Ab","Gb","Eb","Db"]
@@ -181,16 +198,28 @@
 			function createTextForFile(){
 				const header = "####################\n#\tExercice\n####################\n\n\n"
 				const preText = "|    "
-				const postText = "    |"
+				const postText = "    |\n"
 				var data = header
 
-				scrambeldNodes.forEach( (element,idx) => {
-					const middleIndex = Math.ceil(element.length / 2);
+				var prepared = scrambeldNodes.map(execrises => {
+					return execrises.map(e => {
+						console.log(e)
+						if(e.length == 1){
+							return e+" ";
+						}
+						return e;
+					})
+				})
 
-					const firstHalf = element.splice(0, middleIndex);   
-					const secondHalf = element.splice(-middleIndex);
+				prepared.forEach( (exercice,idx) => {
 
-					var t = "Exercise "+  (idx+1) + ":\n" + preText+ firstHalf.join("    |    ") + postText + "\n" + preText+ secondHalf.join("    |    ") + postText
+					excerciceText = ""
+					sliceIntoChunks(exercice,4).forEach( parts => {
+						excerciceText += preText + parts.join("    |    ") + postText
+					})
+					
+
+					var t = "Exercise "+  (idx+1) + ":\n" + excerciceText
 					data += t + "\n\n"	
 				})
 				return data
