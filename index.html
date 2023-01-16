@@ -9,7 +9,7 @@
 				padding-right: 2em;
 				float:left
 			}
-			#output {
+			#outputElement {
 				padding: 0.5em;
 				max-width: 45em;
 				overflow:hidden;
@@ -23,6 +23,10 @@
 			#out{
 				overflow: hidden;
 				padding: 1em;
+			}
+
+			.together {
+				display: inline-block
 			}
 		</style>
 	</head>
@@ -40,33 +44,38 @@
 					<input type="radio" id="both" name="modie" value="both">
 					<label for="both">use both</label><br>
 					<br>
+					<input type="number" id="amount" name="amount" value="6" min="1">
+					<label for="amount">number of lines</label><br>
+					<input type="checkbox" id="recreate" name="recreate">
+					<label for="recreate">recreate every time</label><br>
+					<br>
 					<input type="button" id="create" name="create" value="recreate" onclick="createNewContent()">
+					<br>
+					<input type="button" id="download" name="download" value="download" onclick="createAndDownload()">
 				</div>
 			</fieldset>
 		</div>
 		<div id="out">
-			<div>
-				<center>
-					<p id="output"></p>
-				</center>
-				<input type="button" id="download" name="download" value="download" onclick="createAndDownload()">
-			</div>
+			
+			<center>
+				<div id="output"></div>
+			</center>
 		</div>
 		<script>
 			const notes = ["C","B","A","G","F","E","D"]
 			const fis = ["A#","G#","F#","D#","C#"]
 			const ges = ["Bb","Ab","Gb","Eb","Db"]
-			var text = ""
+			let text = []
 
-			function createText() {
+			function createNoteArray(){
 				var withFis = document.getElementById('fis').checked
 				var withGes = document.getElementById('ges').checked
 				var withboth = document.getElementById('both').checked
 
 				var combined  = [];
-				var combinedFisAndGes = [];
-
+				
 				if(withboth){
+					var combinedFisAndGes = [];
 					var position = Array.from({length: 5}, () => Math.floor(Math.random() * 2));
 					position.forEach( (arraySelector, index) => 
 						{
@@ -83,26 +92,62 @@
 				}else if(withGes){
 					combined = notes.concat(ges);
 				}
+				
+				return combined
+			}
 
+			function createText() {
+				var amount = document.getElementById('amount').value
+				var withRecreate = document.getElementById('recreate').checked
 
+				var combined = createNoteArray()
 
-				return combined.sort((a, b) => 0.5 - Math.random()).join('|') + "|";
+				text = new Array()
+				for(var i = 0; i < amount; i++){
+					if(withRecreate) combined = createNoteArray()
+					text.push([...combined].sort((a, b) => 0.5 - Math.random()))
+				}
 			}
 
 			function displayText(){
 				var output = document.getElementById('output')
-				output.innerHTML = "<span>" + text.split("|").join("</span><span>|</span><span>") + "</span>"
+
+				const preText = "<span>|</span><span>"
+				const postText = "</span><span>|</span>"
+
+				var textToShow = ""
+				text.forEach( element => {
+					var t = preText + element.join("</span><span>|</span><span>") + postText
+					textToShow += "<div id=\"outputElement\">"+ t + "</div><br><br>"	
+				})
+
+				output.innerHTML = textToShow
 			}
 
 			// Function to download data to a file
 			function createAndDownload(data, filename, type) {
-				if(text == ""){
-					text = createText()
+				if(text.length == 0){
+					createText()
 					displayText()
 				}
-				var data = "####################\n#\tExercice\n####################\n\n\n    " + text.split("|").join("    |    ")
+
+				const header = "####################\n#\tExercice\n####################\n\n\n"
+				const preText = "|    "
+				const postText = "    |"
+				var data = header
+
+				text.forEach( (element,idx) => {
+					const middleIndex = Math.ceil(element.length / 2);
+
+					const firstHalf = element.splice(0, middleIndex);   
+					const secondHalf = element.splice(-middleIndex);
+
+					var t = "Excercice "+  (idx+1) + ":\n" + preText+ firstHalf.join("    |    ") + postText + "\n" + preText+ secondHalf.join("    |    ") + postText
+					data += t + "\n\n"	
+				})
+
 				var type = "text/plain"
-				var filename = "uebung.txt"
+				var filename = "exercice.txt"
 				var file = new Blob([data], {type: type});
 				if (window.navigator.msSaveOrOpenBlob) // IE10+
 					window.navigator.msSaveOrOpenBlob(file, filename);
@@ -121,7 +166,7 @@
 			}
 
 			function createNewContent(){
-				text = createText()
+				createText()
 				displayText()
 			}
 
