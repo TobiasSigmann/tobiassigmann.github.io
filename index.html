@@ -100,8 +100,8 @@
 					<input type="checkbox" id="recreate" name="recreate" disabled>
 					<label for="recreate"> scramble fis and ges</label><br>
 					<br>
-					<input type="button" id="create" class="button" name="create" value="recreate" onclick="createNewContent()"><br>
-					<input type="button" id="download" class="button" name="download" value="download as txt" onclick="createAndDownload()"><br>
+					<input type="button" id="create" class="button" name="create" value="update" onclick="createNewContent()"><br>
+					<input type="button" id="download" class="button" name="download" value="download as txt" onclick="createAndDownloadFile()"><br>
 					<input type="button" id="download" class="button" name="download" value="print / save as pdf" onclick="window.print()"><br>
 					<br>
 					<input type="button" onclick="toggleDarkMode()" class="button" value="Toggle dark mode">
@@ -114,16 +114,23 @@
 			</center>
 		</div>
 		<script>
+			/*
+			 * changing to darkmode
+			 */
 			function toggleDarkMode() {
 				var element = document.body;
 				element.classList.toggle("dark-mode");
 			}
 
+			//Notes for creating the scarmbling array
 			const notes = ["C","B","A","G","F","E","D"]
 			const fis = ["A#","G#","F#","D#","C#"]
 			const ges = ["Bb","Ab","Gb","Eb","Db"]
+
+			//contining the scrammbeled nodes
 			var   scrambeldNodes = []
 
+			//create the scrammbeled nodes using the user input
 			function createNoteArray(){
 				var withFis = document.getElementById('fis').checked
 				var withGes = document.getElementById('ges').checked
@@ -134,6 +141,8 @@
 				if(withboth){
 					var combinedFisAndGes = [];
 					var position = Array.from({length: 5}, () => Math.floor(Math.random() * 2));
+
+					//combine fid and ges to one array
 					position.forEach( (arraySelector, index) => 
 						{
 							if(arraySelector == 1){
@@ -153,6 +162,9 @@
 				return combined
 			}
 
+			/*
+			 * generate ans scramble the node array
+			 */
 			function createRandomNodeArray() {
 				var amount = document.getElementById('amount').value
 				var withRecreate = document.getElementById('recreate').checked
@@ -161,46 +173,58 @@
 
 				scrambeldNodes = []
 				for(var i = 0; i < amount; i++){
+					//recreate fis ges part of the node array
 					if(withRecreate) combined = createNoteArray()
+
+					//scramble
 					scrambeldNodes.push([...combined].sort((a, b) => 0.5 - Math.random()))
 				}
 			}
 
+			/*
+			 * split array into equal parts
+			 */
 			function sliceIntoChunks(arr, chunkSize) {
 				const res = [];
 				for (let i = 0; i < arr.length; i += chunkSize) {
 					const chunk = arr.slice(i, i + chunkSize);
 					res.push(chunk);
 				}
+
 				return res;
 			}
 
+			/*
+			 * create html elements resembling the nodes
+			 */
 			function createHTMLString(){
-				var output = document.getElementById('output')
-
 				const preText = "<p class=\"line\"><span>|</span><span>"
 				const postText = "</span><span>|</span></p>"
 
 				var textToShow = ""
 				scrambeldNodes.forEach( (exercice, idx) => {
+					//for each line
 					htmlExcercice = ""
 					sliceIntoChunks(exercice,4).forEach( parts => {
 						htmlExcercice += preText + parts.join("</span><span>|</span><span>") + postText
 					})
 					
-					
 					textToShow += "<div id=\"outputElement\"><h3>Exercise " + (idx+1) + ":</h3><br>" + htmlExcercice + "</div><br>"	
 				})
 
-				output.innerHTML = textToShow
+				document.getElementById('output').innerHTML = textToShow
 			}
 
+			/*
+			 * create text for textfile
+			 */
 			function createTextForFile(){
 				const header = "####################\n#\tExercice\n####################\n\n\n"
 				const preText = "|    "
 				const postText = "    |\n"
 				var data = header
 
+				//make all nodes the same width (2 caracters)
 				var prepared = scrambeldNodes.map(execrises => {
 					return execrises.map(e => {
 						console.log(e)
@@ -212,29 +236,30 @@
 				})
 
 				prepared.forEach( (exercice,idx) => {
-
+					//for each row
 					excerciceText = ""
 					sliceIntoChunks(exercice,4).forEach( parts => {
 						excerciceText += preText + parts.join("    |    ") + postText
 					})
 					
 
-					var t = "Exercise "+  (idx+1) + ":\n" + excerciceText
-					data += t + "\n\n"	
+					data += "Exercise "+  (idx+1) + ":\n" + excerciceText + "\n\n"	
 				})
+
 				return data
 			}
 
-			function createAndDownload(data, filename, type) {
-				if(scrambeldNodes.length == 0){
-					createRandomNodeArray()
-					createHTMLString()
-				}
-
+			/*
+			 * create text file and download it
+			 * file will contain execises
+			 */
+			function createAndDownloadFile(data, filename, type) {
+				//file information
 				var data = createTextForFile()
-
 				var type = "text/plain"
 				var filename = "exercice.txt"
+
+				//create file
 				var file = new Blob([data], {type: type});
 				if (window.navigator.msSaveOrOpenBlob) // IE10+
 					window.navigator.msSaveOrOpenBlob(file, filename);
@@ -252,34 +277,35 @@
 				}
 			}
 
+			/*
+			 * create nodes and display on page
+			 */
 			function createNewContent(){
 				createRandomNodeArray()
 				createHTMLString()
 			}
 
+			//initial creation
 			createNewContent()
 
-
-
+			/*
+			 * diabel and enable checkbox only if needed
+			 */
 			function disable(){
+				document.getElementById('recreate').checked = false;
 				document.getElementById('recreate').disabled = true
 			}
-
 			function enable(){
 				document.getElementById('recreate').disabled = false
 			}
-
 			document.getElementById('fis').addEventListener('change', function(event) {
 				disable();
 			})
-
 			document.getElementById('ges').addEventListener('change', function(event) {
 				disable();
 			})
-
 			document.getElementById('both').addEventListener('change', function(event) {
 				enable();
-				console.log("both")
 			})
 		</script>
 	</body>
