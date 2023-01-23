@@ -95,10 +95,9 @@
 					<label for="both">use both</label><br>
 					<br>
 					<label for="amount">amount</label>
-					<input type="number" id="amount" name="amount" value="1" min="1" max="1000" style="width:4em"><br>
-					
-					<input type="checkbox" id="recreate" name="recreate" disabled>
-					<label for="recreate"> scramble fis and ges</label><br>
+					<input type="number" id="amount" name="amount" value="1" min="1" max="500" style="width:4em"><br>
+					<label for="fontsizeChanger">fontsize</label>
+					<input class="none" type="range" min="10" max="50" value="10" id="fontsizeChanger" step="1"><br>
 					<br>
 					<input type="button" id="create" class="button" name="create" value="update" onclick="createNewContent()"><br>
 					<input type="button" id="download" class="button" name="download" value="download as txt" onclick="createAndDownloadFile()"><br>
@@ -128,7 +127,8 @@
 			const ges = ["Bb","Ab","Gb","Eb","Db"]
 
 			//contining the scrammbeled nodes
-			var   scrambeldNodes = []
+			var scrambeldNodes = []
+			var fontSize = 25
 
 			//create the scrammbeled nodes using the user input
 			function createNoteArray(){
@@ -167,14 +167,16 @@
 			 */
 			function createRandomNodeArray() {
 				var amount = document.getElementById('amount').value
-				var withRecreate = document.getElementById('recreate').checked
-
+				if(amount < 1) amount = 1;
+				if(amount > 500) amount = 500;
+				document.getElementById('amount').value = amount
+				
 				var combined = createNoteArray()
 
 				scrambeldNodes = []
 				for(var i = 0; i < amount; i++){
 					//recreate fis ges part of the node array
-					if(withRecreate) combined = createNoteArray()
+					combined = createNoteArray()
 
 					//scramble
 					scrambeldNodes.push([...combined].sort((a, b) => 0.5 - Math.random()))
@@ -199,7 +201,7 @@
 			 */
 			function createHTMLString(){
 				const preText = "<p class=\"line\"><span>|</span><span>"
-				const postText = "</span><span>|</span></p>"
+				const postText = "</span><span>|</span></p><br><br>"
 
 				var textToShow = ""
 				scrambeldNodes.forEach( (exercice, idx) => {
@@ -283,30 +285,42 @@
 			function createNewContent(){
 				createRandomNodeArray()
 				createHTMLString()
+				changefontSize()
 			}
 
 			//initial creation
 			createNewContent()
 
-			/*
-			 * diabel and enable checkbox only if needed
-			 */
-			function disable(){
-				document.getElementById('recreate').checked = false;
-				document.getElementById('recreate').disabled = true
+			document.getElementById('amount').addEventListener ("change", function () {
+				createNewContent();
+			});
+			document.getElementById('fis').addEventListener ("change", function () {
+				createNewContent();
+			});
+			document.getElementById('ges').addEventListener ("change", function () {
+				createNewContent();
+			});
+			document.getElementById('both').addEventListener ("change", function () {
+				createNewContent();
+			});
+
+
+
+
+
+			function changefontSize(){
+				document.querySelectorAll('span').forEach(node => {
+					node.style.fontSize =  fontSize + "pt"
+				})
 			}
-			function enable(){
-				document.getElementById('recreate').disabled = false
+
+			// Update the current slider value (each time you drag the slider handle)
+			document.getElementById("fontsizeChanger").oninput = function() {
+				fontSize = this.value 
+				changefontSize()
 			}
-			document.getElementById('fis').addEventListener('change', function(event) {
-				disable();
-			})
-			document.getElementById('ges').addEventListener('change', function(event) {
-				disable();
-			})
-			document.getElementById('both').addEventListener('change', function(event) {
-				enable();
-			})
+
+			document.getElementById("fontsizeChanger").value = fontSize
 		</script>
 	</body>
 </html>
