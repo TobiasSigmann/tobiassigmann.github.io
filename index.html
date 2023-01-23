@@ -23,14 +23,13 @@
 				width:6%;
 				text-align: right;
 			}
+
 			#outputElement {
 				padding: 1em;
-				max-width: 45em;
 				border: solid black;
 			}
 			#settings{
 				float:left;
-				display: flex;
 				padding: 1em;
 			}
 			#settings .button{
@@ -40,17 +39,16 @@
 				overflow: hidden;
 				padding: 1em;
 			}
+
 			h3{
 				text-align: left;
 				margin: 0em;
-				
 			}
 
 			.dark-mode {
 				background-color: black;
 				color: white;
 			}
-
 			.dark-mode #outputElement{
 				border: solid white;
 			}
@@ -69,12 +67,28 @@
 					visibility: visible;
 				}
 				.section-to-print #outputElement{
-					width: 80%;
+					width: 95%;
 					page-break-inside : avoid;
 					border: solid black;
 				}
 				.section-to-print #out{
 					overflow: none;
+					padding: 1em;
+				}
+				#outputElement {
+					padding: 0em;
+					border: solid black;
+				}
+				#out{
+					overflow: hidden;
+					padding: 0em;
+				}
+			}
+
+			@media only screen and (max-width: 60em) {
+				#settings{
+					float:none;
+					display: flex;
 					padding: 1em;
 				}
 			}
@@ -86,25 +100,23 @@
 		<div id="settings">
 			<fieldset>
 				<legend>Settings</legend>
-				<div>
 					<input type="radio" id="fis" name="modie" value="fis" checked>
-					<label for="fis">use fis</label><br>
+					<label for="fis">use #</label><br>
 					<input type="radio" id="ges" name="modie" value="ges">
-					<label for="ges">use ges</label><br>
+					<label for="ges">use b</label><br>
 					<input type="radio" id="both" name="modie" value="both">
 					<label for="both">use both</label><br>
 					<br>
 					<label for="amount">amount</label>
 					<input type="number" id="amount" name="amount" value="1" min="1" max="500" style="width:4em"><br>
 					<label for="fontsizeChanger">fontsize</label>
-					<input class="none" type="range" min="10" max="50" value="10" id="fontsizeChanger" step="1"><br>
+					<input class="none" type="range" min="10" max="80" value="10" id="fontsizeChanger" step="1"><br>
 					<br>
 					<input type="button" id="create" class="button" name="create" value="update" onclick="createNewContent()"><br>
 					<input type="button" id="download" class="button" name="download" value="download as txt" onclick="createAndDownloadFile()"><br>
 					<input type="button" id="download" class="button" name="download" value="print / save as pdf" onclick="window.print()"><br>
 					<br>
 					<input type="button" onclick="toggleDarkMode()" class="button" value="Toggle dark mode">
-				</div>
 			</fieldset>
 		</div>
 		<div id="out">
@@ -128,7 +140,17 @@
 
 			//contining the scrammbeled nodes
 			var scrambeldNodes = []
-			var fontSize = 25
+
+			//fontsize handling
+			var fontSize = localStorage.getItem("fontsize");
+			if(fontSize == null) fontSize = 25
+			localStorage.setItem("fontsize", fontSize);
+
+			//amount
+			var amount = localStorage.getItem("amount");
+			if(amount == null) amount = 1
+			document.getElementById('amount').value = amount
+			localStorage.setItem("amount", amount);
 
 			//create the scrammbeled nodes using the user input
 			function createNoteArray(){
@@ -170,6 +192,8 @@
 				if(amount < 1) amount = 1;
 				if(amount > 500) amount = 500;
 				document.getElementById('amount').value = amount
+				localStorage.setItem("amount", amount);
+
 				
 				var combined = createNoteArray()
 
@@ -178,8 +202,15 @@
 					//recreate fis ges part of the node array
 					combined = createNoteArray()
 
+					var c = 0
 					//scramble
-					scrambeldNodes.push([...combined].sort((a, b) => 0.5 - Math.random()))
+					scrambeldNodes.push([...combined].sort((a, b) => {
+						console.log(a,b)
+						c += 1
+						return 0.5 - Math.random()
+
+				}))
+				console.log("-",c)
 				}
 			}
 
@@ -304,10 +335,6 @@
 				createNewContent();
 			});
 
-
-
-
-
 			function changefontSize(){
 				document.querySelectorAll('span').forEach(node => {
 					node.style.fontSize =  fontSize + "pt"
@@ -318,6 +345,7 @@
 			document.getElementById("fontsizeChanger").oninput = function() {
 				fontSize = this.value 
 				changefontSize()
+				localStorage.setItem("fontsize", fontSize);
 			}
 
 			document.getElementById("fontsizeChanger").value = fontSize
