@@ -1,0 +1,173 @@
+/*Footer*/
+body {
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    min-height: 50px;
+}
+
+footer {
+    min-height: 1em;
+    color: darkslategray
+}
+
+content {
+    flex: 1;
+}
+
+/* Tooltip */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/*Excersise*/
+.line {
+    display: inline;
+    white-space: nowrap;
+}
+
+.line span {
+    display: inline-block;
+    width: 12%;
+}
+
+.line span:first-child {
+    width: 6%;
+    text-align: left;
+}
+
+.line span:last-child {
+    width: 6%;
+    text-align: right;
+}
+
+#outputElement {
+    padding: 1em;
+    border: solid black;
+}
+
+#out {
+    overflow: hidden;
+    padding: 1em;
+}
+
+/*Settings*/
+h3 {
+    text-align: left;
+    margin: 0em;
+}
+
+#settings {
+    float: left;
+    padding: 1em;
+}
+
+#settings .button {
+    width: 100%;
+}
+
+/*Metrono,*/
+#metronom {
+    float: left;
+    padding: 1em;
+}
+
+#metronom .button {
+    width: 100%;
+}
+
+/*Darkmode*/
+.dark-mode {
+    background-color: black;
+    color: white;
+}
+
+.dark-mode #outputElement {
+    border: solid white;
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+        background-color: white;
+        color: black;
+    }
+
+    #settings {
+        float: none;
+        position: fixed;
+    }
+
+    .section-to-print,
+    .section-to-print * {
+        visibility: visible;
+    }
+
+    .section-to-print #outputElement {
+        width: 95%;
+        page-break-inside: avoid;
+        border: solid black;
+    }
+
+    .section-to-print #out {
+        overflow: none;
+        padding: 1em;
+    }
+
+    #outputElement {
+        padding: 0em;
+        border: solid black;
+    }
+
+    #out {
+        overflow: hidden;
+        padding: 0em;
+    }
+}
+
+@media only screen and (max-width: 60em) {
+    #settings {
+        float: none;
+        display: flex;
+        padding: 1em;
+    }
+}
