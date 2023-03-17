@@ -4,8 +4,10 @@
 <head>
 	<title>12-Tone Random Generator</title>
 	<link rel="icon" type="image/x-icon" href="../images/favicon.ico">
-	<link rel="stylesheet" href="style.css">
-	<link rel="manifest" href="manifest.webmanifest">
+	<link rel="stylesheet" href="./style.css">
+	<link rel="manifest" href="./manifest.webmanifest">
+	<script src="timer.js"></script>
+	<script src="Metronom.js"></script>
 	
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -51,20 +53,19 @@
 				</fieldset>
 			<fieldset>
 				<legend>Metrono</legend>
-				<div style="height:10em;background-color: black;"></div>
-				<p>speed: 40</p>
-				<input type="button" onclick="toggleDarkMode()" class="button" value="start">
+				<p id="bpmdisplay"></p>
+				<input type="button" onclick="toggleMetronom()" class="button" value="start" id="metronomstart">
 				<label for="speed">BPM</label>
-				<input class="none" type="range" min="10" max="80" value="10" id="speed" step="1"><br>
+				<input class="none" type="range" min="20" max="220" value="120" id="speed" step="1"><br>
 				<label for="length">Length</label>
-				<input type="number" id="length" name="amount" value="1" min="1" max="500" style="width:4em">
+				<input type="number" id="length" name="amount" value="1" min="1" max="10" style="width:4em">
 				<hr>
 				<br>
-				<label for="length">Play for </label>
-				<input type="number" id="length" name="amount" value="1" min="1" max="500" style="width:4em"><br>
+				<label for="playFor">Play for </label>
+				<input type="number" id="playFor" name="amount" value="1" min="1" max="500" style="width:4em"><br>
 				<br>
-				<label for="length">Pause for</label>
-				<input type="number" id="length" name="amount" value="1" min="1" max="500" style="width:4em">
+				<label for="pauseFor">Pause for</label>
+				<input type="number" id="pauseFor" name="amount" value="1" min="1" max="500" style="width:4em">
 			</fieldset>
 		</div>
 		<div id="out">

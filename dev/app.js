@@ -1,3 +1,4 @@
+
 /*
     * changing to darkmode
     */
@@ -221,3 +222,55 @@ document.getElementById("fontsizeChanger").oninput = function() {
 }
 
 document.getElementById("fontsizeChanger").value = fontSize
+
+
+
+
+
+//Mentronom
+var bpm = 120
+var length = 4
+const metronom = new Metronom(bpm, length)
+document.getElementById("bpmdisplay").innerText = bpm
+document.getElementById("speed").value = bpm
+document.getElementById("length").value = length
+document.getElementById("playFor").value = 4
+
+
+document.getElementById("speed").oninput = function () {
+    bpm = this.value
+    document.getElementById("bpmdisplay").innerText = bpm
+    metronom.updateMetronomspeed(bpm)
+}
+
+document.getElementById("speed").oninput = function () {
+    bpm = this.value
+    document.getElementById("bpmdisplay").innerText = bpm
+    metronom.updateMetronomspeed(bpm)
+}
+
+document.getElementById("length").oninput = function () {
+    length = this.value
+    metronom.updateLength(length)
+}
+
+document.getElementById("playFor").oninput = function () {
+    length = this.value
+    metronom.playFor(length)
+}
+
+document.getElementById("pauseFor").oninput = function () {
+    length = this.value
+    metronom.pauseFor(length)
+}
+
+var metronomstate = false
+function toggleMetronom() {
+    metronomstate = !metronomstate
+    metronom.contolState(metronomstate)
+    if (metronomstate) {
+        document.getElementById("metronomstart").value = "stop"
+    } else {
+        document.getElementById("metronomstart").value = "start"
+    }
+}
