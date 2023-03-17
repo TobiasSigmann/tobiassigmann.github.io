@@ -1,0 +1,13 @@
+/* TEAM */
+	Developer: Tobias Sigmann
+	Contact: tobias.sigmann [at] gmail.com
+	Github: https://github.com/SiggiSigmann/
+	From: Heilbronn, BW, Germany
+
+
+/* SITE */
+	Last update: 2023/03/15
+	Language: Eglish
+	Doctype: HTML
+	IDE: VS-Code
+	Github: https://github.com/TobiasSigmann/tobiassigmann.github.io

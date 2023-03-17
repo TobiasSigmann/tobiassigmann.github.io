@@ -1,0 +1,15 @@
+{
+    "background_color": "white",
+    "description": "12-Tone Random Generators",
+    "display": "fullscreen",
+    "icons": [
+        {
+            "src": "/images/favicon.ico",
+            "sizes": "64x64",
+            "type": "image/png"
+        }
+    ],
+    "name": "12-Tone Generators",
+    "short_name": "12-Tones",
+    "start_url": "/"
+}
