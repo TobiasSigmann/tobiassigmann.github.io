@@ -1,3 +1,5 @@
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
 class Metronom {
     constructor(startbpm, length) {
         this.timer = new Timer(60000 / startbpm);
@@ -11,6 +13,8 @@ class Metronom {
 
         this.click2 = new Audio('./sounds/klack.mp3');
         this.click1 = new Audio('./sounds/klick.mp3');
+
+
     }
 
     playSound() {
@@ -25,11 +29,24 @@ class Metronom {
     }
 
     play(highOrLow) {
+        var volume = audioCtx.createGain();
+        volume.connect(audioCtx.destination);
+        volume.gain.value = 0.2;
+        this.oscillator = audioCtx.createOscillator();
+        this.oscillator.connect(volume);
+        
+        let currentTime = audioCtx.currentTime;
         if (this.isplayingMode) {
             if (highOrLow) {
-                this.click1.play();
+                this.oscillator.frequency.value = 330; // value in hertz
+                this.oscillator.start(currentTime);
+                this.oscillator.stop(currentTime + 0.05);
+                //this.click1.play();
             } else {
-                this.click2.play();
+                this.oscillator.frequency.value = 430; // value in hertz
+                this.oscillator.start(currentTime);
+                this.oscillator.stop(currentTime + 0.05);
+                //this.click2.play();
             }
             console.log(this.taktcounter)
             if (this.taktcounter == this.playForAmount && this.pauseForAmount > 0) {
