@@ -18,13 +18,14 @@ class Metronom {
     }
 
     playSound() {
+        
+
+        this.play(this.countPlayed == 0)
+        
         this.countPlayed++
         if (this.countPlayed == this.length) {
             this.countPlayed = 0
             this.taktcounter++
-            this.play(true)
-        } else {
-            this.play(false)
         }
     }
 
@@ -93,6 +94,10 @@ class Metronom {
 
     enableAdvanced(enable){
         this.advancedEnable = !enable
+    }
+
+    setVolume(volume){
+        this.volume.gain.value = volume;
     }
 }
 

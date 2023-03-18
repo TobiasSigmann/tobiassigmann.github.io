@@ -67,6 +67,7 @@ const advancedEnabledCB = document.getElementById("advanced")
 const playForInput = document.getElementById("playFor")
 const pauseForInput = document.getElementById("pauseFor")
 const bpmdisplay = document.getElementById("bpmdisplay")
+const volumeSlider = document.getElementById("volumeSlider")
 const metronom = new Metronom(bpm, length)
 
 //---- set start condition ----
@@ -102,6 +103,12 @@ if (pauseFor == null) pauseFor = 1
 pauseForInput.value = pauseFor
 metronom.pauseFor(pauseFor)
 localStorage.setItem("pauseFor", pauseFor);
+
+var volume = localStorage.getItem("volume");
+if (volume == null) volume = 0.5
+volumeSlider.value = volume
+metronom.setVolume(volume)
+localStorage.setItem("volume", volume);
 
 //---- action handler ---
 bpmSlider.oninput = function () {
@@ -155,13 +162,19 @@ tabButton.onclick = function toggleMetronom() {
     var bpmFromTap = Math.ceil(60000 / (temp - lastTap))
     lastTap = temp;
 
-    if (bpmFromTap > 20){
+    if (bpmFromTap > 19 && bpmFromTap < 301){
         bpm = bpmFromTap
         localStorage.setItem("bpm", bpmFromTap);
         document.getElementById("bpmdisplay").innerText = bpmFromTap
         metronom.updateMetronomspeed(bpmFromTap)
         bpmSlider.value = bpmFromTap
     }
+}
+
+volumeSlider.oninput = function () {
+    volume = this.value
+    localStorage.setItem("volume", volume);
+    metronom.setVolume(volume)
 }
 
 //initial creation
