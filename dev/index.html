@@ -1,87 +1,101 @@
 <!DOCTYPE html>
 <html>
+	<head>
+		<title>12-Tone Random Generator</title>
+		<link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+		<link rel="stylesheet" href="./style.css">
+		<link rel="manifest" href="./manifest.webmanifest">
+		<script src="./scripts/view.js"></script>
+		<script src="./scripts/generator.js"></script>
+		<script src="./scripts/timer.js"></script>
+		<script src="./scripts/metronom.js"></script>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="Random generated guitar exercise">
+		<meta name="keywords" content="Harmonic, Exercise, Guitar">
+		<meta name="author" content="Tobias Sigmann">
+		</head>
 
-<head>
-	<title>12-Tone Random Generator</title>
-	<link rel="icon" type="image/x-icon" href="../images/favicon.ico">
-	<link rel="stylesheet" href="./style.css">
-	<link rel="manifest" href="./manifest.webmanifest">
-	<script src="timer.js"></script>
-	<script src="Metronom.js"></script>
-	
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<meta name="description" content="Random generated guitar exercise">
-	<meta name="keywords" content="Harmonic, Exercise, Guitar">
-	<meta name="author" content="Tobias Sigmann">
-</head>
-
-<body>
-	<header>
-		<h1 class="section-to-print">12-Tone Random Generators</h1>
-		<hr>
-	</header>
-	<content>
-		<div id="settings">
-			<fieldset>
-				<legend>Settings</legend>
-				<input type="radio" id="fis" name="modie" value="fis" checked>
-				<label for="fis">use #</label><br>
-				<input type="radio" id="ges" name="modie" value="ges">
-				<label for="ges">use b</label><br>
-				<input type="radio" id="both" name="modie" value="both">
-				<label for="both">use both</label><br>
-				<br>
-				<input type="checkbox" id="hardcore" name="hardcore" value="hardcore">
-				<label for="hardcore">hardcore </label>
-				<div class="tooltip">(i)
-					<p class="tooltiptext">randomly replace C, B, E, F with B#, Cb, Fb, E# (they are the same)</p>
-				</div><br>
-				<br>
-				<label for="amount">amount</label>
-				<input type="number" id="amount" name="amount" value="1" min="1" max="500" style="width:4em"><br>
-				<label for="fontsizeChanger">fontsize</label>
-				<input class="none" type="range" min="10" max="80" value="10" id="fontsizeChanger" step="1"><br>
-				<br>
-				<input type="button" id="create" class="button" name="create" value="update" onclick="createNewContent()"><br>
-				<br>
-				<input type="button" id="download" class="button" name="download" value="print / save as pdf"
-					onclick="window.print()"><br>
-				<br>
-				<br>
-				<input type="button" onclick="toggleDarkMode()" class="button" value="Toggle dark mode">
+	<body>
+		<header>
+			<h1 class="section-to-print">12-Tone Random Generators</h1>
+			<hr>
+		</header>
+		<content>
+			<div id="settings">
+				<fieldset>
+					<legend>Settings</legend>
+					<input type="radio" id="fis" name="modie" value="fis" checked>
+					<label for="fis">use #</label>
+					<br>
+					<input type="radio" id="ges" name="modie" value="ges">
+					<label for="ges">use b</label>
+					<br>
+					<input type="radio" id="both" name="modie" value="both">
+					<label for="both">use both</label>
+					<br>
+					<br>
+					<input type="checkbox" id="hardcore" name="hardcore" value="hardcore">
+					<label for="hardcore">hardcore</label>
+					<div class="tooltip">(i)
+						<p class="tooltiptext">randomly replace C, B, E, F with B#, Cb, Fb, E# (they are the same)</p>
+					</div>
+					<br>
+					<br>
+					<label for="amount">amount</label>
+					<input type="number" id="amount" name="amount" value="1" min="1" max="500" style="width:4em">
+					<br>
+					<label for="fontsizeChanger">fontsize</label>
+					<input class="none" type="range" min="10" max="80" value="10" id="fontsizeChanger" step="1" style="width:100%;">
+					<br>
+					<br>
+					<input type="button" id="create" class="button" name="create" value="update">
+					<br>
+					<br>
+					<input type="button" id="download" class="button" name="download" value="print / save as pdf">
+					<br>
+					<br>
+					<br>
+					<input type="button" class="button" value="Toggle dark mode" id="darkModeButton">
 				</fieldset>
-			<fieldset>
-				<legend>Metrono</legend>
-				<p id="bpmdisplay"></p>
-				<input type="button" onclick="toggleMetronom()" class="button" value="start" id="metronomstart">
-				<label for="speed">BPM</label>
-				<input class="none" type="range" min="20" max="220" value="120" id="speed" step="1"><br>
-				<label for="length">Length</label>
-				<input type="number" id="length" name="amount" value="1" min="1" max="10" style="width:4em">
-				<hr>
-				<br>
-				<label for="playFor">Play for </label>
-				<input type="number" id="playFor" name="amount" value="1" min="1" max="500" style="width:4em"><br>
-				<br>
-				<label for="pauseFor">Pause for</label>
-				<input type="number" id="pauseFor" name="amount" value="1" min="1" max="500" style="width:4em">
-			</fieldset>
-		</div>
-		<div id="out">
-			<center>
-				<div id="output" class="section-to-print"></div>
-			</center>
-		</div>
+				<fieldset>
+					<legend>Metrono</legend>
+					<p id="bpmdisplay" style="text-align: center "></p>
+					<input type="button" class="button" value="tap" id="tap">
+					<br>
+					<br>
+					<input type="button" class="button" value="start" id="metronomstart">
+					<label for="speed">BPM</label>
+					<input class="none" type="range" min="20" max="300" value="120" id="bpmSlider" step="1" style="width:100%;">
+					<br>
+					<label for="length">Length</label>
+					<input type="number" id="length" name="amount" value="1" min="1" max="10" style="width:4em">
+					<hr>
+					<input type="checkbox" id="advanced" name="advanced" value="advanced">
+					<label for="advanced">advanced</label>
+					<br>
+					<label for="playFor">Play for</label>
+					<input type="number" id="playFor" name="amount" value="1" min="1" max="500" style="width:4em">
+					<br>
+					<br>
+					<label for="pauseFor">Pause for</label>
+					<input type="number" id="pauseFor" name="amount" value="1" min="1" max="500" style="width:4em">
+					</fieldset>
+					</div>
+					<div id="out">
+						<center>
+							<div id="output" class="section-to-print"></div>
+						</center>
+					</div>
 		</content>
 		<footer>
 			<hr>
 			<p>
-			Developer: Tobias Sigmann, E-Mail: <a href="mailto:tobias.sigmann@gmail.com">tobias.sigmann@gmail.com</a>, Github: <a href="https://github.com/SiggiSigmann">https://github.com/SiggiSigmann</a>
+				Developer: Tobias Sigmann,
+				E-Mail: <a href="mailto:tobias.sigmann@gmail.com">tobias.sigmann@gmail.com</a>,
+				Github: <a href="https://github.com/SiggiSigmann">https://github.com/SiggiSigmann</a>
 			</p>
-			</footer>
-
-	<script src="app.js"></script>
+		</footer>
+		<script src="./scripts/app.js"></script>
 	</body>
-
 </html>

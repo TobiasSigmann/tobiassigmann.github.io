@@ -10,11 +10,11 @@ class Metronom {
         this.pauseForAmount = 1
         this.taktcounter = 0
         this.isplayingMode = true
-
-        this.click2 = new Audio('./sounds/klack.mp3');
-        this.click1 = new Audio('./sounds/klick.mp3');
-
-
+        this.advancedEnable = false
+        this.active = false
+        this.volume = audioCtx.createGain();
+        this.volume.connect(audioCtx.destination);
+        this.volume.gain.value = 1;
     }
 
     playSound() {
@@ -29,26 +29,18 @@ class Metronom {
     }
 
     play(highOrLow) {
-        var volume = audioCtx.createGain();
-        volume.connect(audioCtx.destination);
-        volume.gain.value = 0.2;
-        this.oscillator = audioCtx.createOscillator();
-        this.oscillator.connect(volume);
-        
+        let oscillator = this.generateoscillator()
+
         let currentTime = audioCtx.currentTime;
-        if (this.isplayingMode) {
+        if (this.isplayingMode || this.advancedEnable) {
             if (highOrLow) {
-                this.oscillator.frequency.value = 330; // value in hertz
-                this.oscillator.start(currentTime);
-                this.oscillator.stop(currentTime + 0.05);
-                //this.click1.play();
+                oscillator.frequency.value = 430; 
             } else {
-                this.oscillator.frequency.value = 430; // value in hertz
-                this.oscillator.start(currentTime);
-                this.oscillator.stop(currentTime + 0.05);
-                //this.click2.play();
+                oscillator.frequency.value = 330; 
             }
-            console.log(this.taktcounter)
+            oscillator.start(currentTime);
+            oscillator.stop(currentTime + 0.05);
+
             if (this.taktcounter == this.playForAmount && this.pauseForAmount > 0) {
                 this.taktcounter = 0;
                 this.isplayingMode = !this.isplayingMode
@@ -61,20 +53,27 @@ class Metronom {
         }
     }
 
+    generateoscillator(){
+        let oscillator = audioCtx.createOscillator();
+        oscillator.connect(this.volume);
+        return oscillator
+    }
+
 
     updateMetronomspeed(bpm) {
         console.log("set bpm", bpm)
         this.timer.timeInterval = 60000 / bpm;
     }
 
-    contolState(active) {
-        console.log("set metronom", active)
-        if (active) {
+    contolState() {
+        this.active = !this.active
+        if (this.active) {
             this.countPlayed = 0
             this.timer.start()
         } else {
             this.timer.stop()
         }
+        return this.active
     }
 
     updateLength(length) {
@@ -91,10 +90,11 @@ class Metronom {
         this.pauseForAmount = amount
         this.isplayingMode = true
     }
+
+    enableAdvanced(enable){
+        this.advancedEnable = !enable
+    }
 }
-
-
-
 
 
 
