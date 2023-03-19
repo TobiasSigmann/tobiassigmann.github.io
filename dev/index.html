@@ -3,6 +3,7 @@
 	<head>
 		<title>12-Tone Random Generator</title>
 		<link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="./style.css">
 		<link rel="manifest" href="./manifest.webmanifest">
 		<script src="./scripts/view.js"></script>
@@ -35,36 +36,58 @@
 					<label for="both">use both</label>
 					<br>
 					<br>
-					<input type="checkbox" id="hardcore" name="hardcore" value="hardcore">
-					<label for="hardcore">hardcore</label>
+					<label class="switch">
+						<input type="checkbox" id="hardcore">
+						<span class="slider round"></span>
+					</label>
+					<label for="hardcore">Hardcore</label>
 					<div class="tooltip">(i)
 						<p class="tooltiptext">randomly replace C, B, E, F with B#, Cb, Fb, E# (they are the same)</p>
 					</div>
 					<br>
 					<br>
-					<label for="amount">amount</label>
+					<label for="amount">Amount</label>
 					<input type="number" id="amount" name="amount" value="1" min="1" max="500" style="width:4em">
 					<br>
-					<label for="fontsizeChanger">fontsize</label>
+					<br>
+					<label for="fontsizeChanger">Fontsize</label>
 					<input class="none" type="range" min="10" max="80" value="10" id="fontsizeChanger" step="1" style="width:100%;">
 					<br>
 					<br>
-					<input type="button" id="create" class="button" name="create" value="update">
+					<table>
+						<tr>
+							<td>
+								<button id="create"><i class="fa fa-refresh"></i></button>
+							</td>
+							<td>
+								<button id="download"><i class="fa fa-print"></i></button>
+							</td>
+						</tr>
+					</table>
 					<br>
 					<br>
-					<input type="button" id="download" class="button" name="download" value="print / save as pdf">
-					<br>
-					<br>
-					<br>
-					<input type="button" class="button" value="Toggle dark mode" id="darkModeButton">
+					<label class="switch">
+						<input type="checkbox" id="darkModeButton">
+						<span class="slider round"></span>
+					</label>
+					<label for="darkModeButton">darkmode</label>
 				</fieldset>
 				<fieldset>
 					<legend>Metrono</legend>
+					<br>
 					<p id="bpmdisplay" style="text-align: center "></p>
-					<input type="button" class="button" value="tap" id="tap">
 					<br>
+					<table>
+						<tr>
+							<td>
+								<button id="tap">Tap</button>
+							</td>
+							<td>
+								<button id="metronomstart"><i id="imageForPlayButton" class="fa fa-play"></i></button>
+							</td>
+						</tr>
+					</table>
 					<br>
-					<input type="button" class="button" value="start" id="metronomstart">
 					<label for="speed">BPM</label>
 					<input class="none" type="range" min="20" max="300" value="120" id="bpmSlider" step="1" style="width:100%;">
 					<br>
@@ -74,8 +97,12 @@
 					<label for="length">Length</label>
 					<input type="number" id="length" name="amount" value="1" min="1" max="10" style="width:4em">
 					<hr>
-					<input type="checkbox" id="advanced" name="advanced" value="advanced">
-					<label for="advanced">advanced</label>
+					<label class="switch">
+						<input type="checkbox" id="advanced">
+						<span class="slider round"></span>
+					</label>
+					<label for="hardcore">advanced</label>
+					<br>
 					<br>
 					<label for="playFor">Play for</label>
 					<input type="number" id="playFor" name="amount" value="1" min="1" max="500" style="width:4em">

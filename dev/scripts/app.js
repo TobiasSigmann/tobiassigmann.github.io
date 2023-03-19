@@ -34,6 +34,9 @@ hardcoreModeCB.onchange = function () {
 updateButton.onclick = function () {
     createNewContent()
 };
+fileDownloadButton.onclick = function () {
+    window.print()
+};
 
 
 //################################### view control ###################################
@@ -46,6 +49,13 @@ if (fontSize == null) fontSize = 25
 fontSizeInput.value = fontSize
 localStorage.setItem("fontsize", fontSize);
 
+var darkMode = localStorage.getItem("darkMode") == "true";
+if (darkMode == null) darkMode = false
+darkModeButton.checked = darkMode
+toggleDarkMode(darkMode)
+localStorage.setItem("darkMode", darkMode);
+
+
 //---- action handler ---
 // Update the current slider value (each time you drag the slider handle)
 fontSizeInput.oninput = function () {
@@ -55,12 +65,14 @@ fontSizeInput.oninput = function () {
 }
 
 darkModeButton.onclick = function () {
-    toggleDarkMode()
+    toggleDarkMode(darkModeButton.checked)
+    localStorage.setItem("darkMode", darkModeButton.checked);
 };
 
 //################################### metronom ###################################
 const tabButton = document.getElementById("tap")
 const metronomStatusButton = document.getElementById("metronomstart")
+const imageForPlayButtonElement = document.getElementById("imageForPlayButton")
 const bpmSlider = document.getElementById("bpmSlider")
 const lengthInput = document.getElementById("length")
 const advancedEnabledCB = document.getElementById("advanced")
@@ -148,9 +160,11 @@ metronomStatusButton.onclick = function toggleMetronom() {
     var state = metronom.contolState()
     console.log(state)
     if (state) {
-        metronomStatusButton.value = "stop"
+        imageForPlayButtonElement.classList.remove("fa-play");
+        imageForPlayButtonElement.classList.add("fa-stop");
     } else {
-        metronomStatusButton.value = "start"
+        imageForPlayButtonElement.classList.remove("fa-stop");
+        imageForPlayButtonElement.classList.add("fa-play");
     }
 }
 

@@ -1,25 +1,22 @@
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-class Metronom {
-    constructor(startbpm, length) {
-        this.timer = new Timer(60000 / startbpm);
-        console.log(this.timer)
-        this.countPlayed = 0;
-        this.length = length
-        this.playForAmount = 4
-        this.pauseForAmount = 1
-        this.taktcounter = 0
-        this.isplayingMode = true
-        this.advancedEnable = false
-        this.active = false
-        this.volume = audioCtx.createGain();
-        this.volume.connect(audioCtx.destination);
-        this.volume.gain.value = 1;
-    }
+function Metronom(startbpm, ) {
+    this.timer = new Timer(60000 / startbpm);
+    this.countPlayed = 0;
+    this.length = length
+    this.playForAmount = 4
+    this.pauseForAmount = 1
+    this.taktcounter = 0
+    this.isplayingMode = true
+    this.advancedEnable = false
+    this.active = false
+    this.volume = audioCtx.createGain();
+    this.volume.connect(audioCtx.destination);
+    this.volume.gain.value = 1;
 
-    playSound() {
-        
 
+
+    this.playSound = () => {
         this.play(this.countPlayed == 0)
         
         this.countPlayed++
@@ -29,7 +26,7 @@ class Metronom {
         }
     }
 
-    play(highOrLow) {
+    this.play = (highOrLow) => {
         let oscillator = this.generateoscillator()
 
         let currentTime = audioCtx.currentTime;
@@ -54,19 +51,19 @@ class Metronom {
         }
     }
 
-    generateoscillator(){
+    this.generateoscillator = () => {
         let oscillator = audioCtx.createOscillator();
         oscillator.connect(this.volume);
         return oscillator
     }
 
 
-    updateMetronomspeed(bpm) {
+    this.updateMetronomspeed = (bpm) => {
         console.log("set bpm", bpm)
         this.timer.timeInterval = 60000 / bpm;
     }
 
-    contolState() {
+    this.contolState = () => {
         this.active = !this.active
         if (this.active) {
             this.countPlayed = 0
@@ -77,26 +74,26 @@ class Metronom {
         return this.active
     }
 
-    updateLength(length) {
+    this.updateLength = (length) => {
         this.length = length
         this.countPlayed = 0
     }
 
-    playFor(amount) {
+    this.playFor = (amount) => {
         this.playForAmount = amount
         this.isplayingMode = true
     }
 
-    pauseFor(amount) {
+    this.pauseFor = (amount) => {
         this.pauseForAmount = amount
         this.isplayingMode = true
     }
 
-    enableAdvanced(enable){
+    this.enableAdvanced = (enable) => {
         this.advancedEnable = !enable
     }
 
-    setVolume(volume){
+    this.setVolume = (volume) => {
         this.volume.gain.value = volume;
     }
 }

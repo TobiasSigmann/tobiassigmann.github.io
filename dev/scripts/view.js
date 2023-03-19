@@ -1,9 +1,13 @@
 /*
  * changing to dar mode or light mode
  */
-function toggleDarkMode() {
+function toggleDarkMode(isDark) {
     var element = document.body;
-    element.classList.toggle("dark-mode");
+    if (isDark){
+        element.classList.add("dark-mode");
+    }else{
+        element.classList.remove("dark-mode");
+    }
 }
 
 /*
