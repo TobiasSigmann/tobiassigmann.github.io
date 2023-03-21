@@ -34,7 +34,8 @@ header label {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: dimgray;
+    background-color: rgb(239, 239, 239);
+    border: 1px solid #000;
     -webkit-transition: .4s;
     transition: .4s;
 }
@@ -46,13 +47,13 @@ header label {
     width: 18px;
     left: 4px;
     bottom: 4px;
-    background-color: black;
+    background-color: rgb(77, 77, 77);
     -webkit-transition: .4s;
     transition: .4s;
 }
 
 input:checked+.slider {
-    background-color: lightgray;
+    background-color: rgb(190, 190, 190);
 }
 
 input:checked+.slider:before {
