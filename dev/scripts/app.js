@@ -73,19 +73,21 @@ darkModeButton.onclick = function () {
 const tabButton = document.getElementById("tap")
 const metronomStatusButton = document.getElementById("metronomstart")
 const imageForPlayButtonElement = document.getElementById("imageForPlayButton")
-const bpmSlider = document.getElementById("bpmSlider")
 const lengthInput = document.getElementById("length")
 const advancedEnabledCB = document.getElementById("advanced")
 const playForInput = document.getElementById("playFor")
 const pauseForInput = document.getElementById("pauseFor")
 const bpmdisplay = document.getElementById("bpmdisplay")
 const volumeSlider = document.getElementById("volumeSlider")
-const metronom = new Metronom(bpm, length)
+const buttonUp = document.getElementById("buttonup")
+const buttonDown = document.getElementById("buttondown")
+const buttonUp10 = document.getElementById("buttonup10")
+const buttonDown10 = document.getElementById("buttondown10")
+const metronom = new Metronom()
 
 //---- set start condition ----
-var bpm = localStorage.getItem("bpm");
+var bpm = parseInt(localStorage.getItem("bpm"));
 if (bpm == null) bpm = 150
-bpmSlider.value = bpm
 bpmdisplay.innerHTML = bpm
 metronom.updateMetronomspeed(bpm)
 localStorage.setItem("bpm", bpm);
@@ -123,11 +125,36 @@ metronom.setVolume(volume)
 localStorage.setItem("volume", volume);
 
 //---- action handler ---
-bpmSlider.oninput = function () {
-    bpm = this.value
-    localStorage.setItem("bpm", bpm);
-    document.getElementById("bpmdisplay").innerText = bpm
+buttonUp.onclick = function () {
+    bpm += 1
+    if (bpm > 300) bpm = 300
+    bpmdisplay.innerHTML = bpm
     metronom.updateMetronomspeed(bpm)
+    localStorage.setItem("bpm", bpm);
+}
+
+buttonDown.onclick = function () {
+    bpm -= 1
+    if (bpm < 20) bpm = 20
+    bpmdisplay.innerHTML = bpm
+    metronom.updateMetronomspeed(bpm)
+    localStorage.setItem("bpm", bpm);
+}
+
+buttonUp10.onclick = function () {
+    bpm += 10
+    if (bpm > 300) bpm = 300
+    bpmdisplay.innerHTML = bpm
+    metronom.updateMetronomspeed(bpm)
+    localStorage.setItem("bpm", bpm);
+}
+
+buttonDown10.onclick = function () {
+    bpm -= 10
+    if (bpm < 20) bpm = 20
+    bpmdisplay.innerHTML = bpm
+    metronom.updateMetronomspeed(bpm)
+    localStorage.setItem("bpm", bpm);
 }
 
 lengthInput.oninput = function () {
@@ -181,7 +208,6 @@ tabButton.onclick = function toggleMetronom() {
         localStorage.setItem("bpm", bpmFromTap);
         document.getElementById("bpmdisplay").innerText = bpmFromTap
         metronom.updateMetronomspeed(bpmFromTap)
-        bpmSlider.value = bpmFromTap
     }
 }
 

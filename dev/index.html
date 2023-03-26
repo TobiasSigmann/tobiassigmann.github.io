@@ -15,8 +15,7 @@
 		<meta name="description" content="Random generated guitar exercise">
 		<meta name="keywords" content="Harmonic, Exercise, Guitar">
 		<meta name="author" content="Tobias Sigmann">
-		</head>
-
+	</head>
 	<body>
 		<header>
 			<h1 class="section-to-print">12-Tone Random Generators</h1>
@@ -73,50 +72,61 @@
 					<label for="darkModeButton">darkmode</label>
 				</fieldset>
 				<fieldset>
-					<legend>Metrono</legend>
+					<legend>Metronom</legend>
 					<br>
-					<p id="bpmdisplay" style="text-align: center "></p>
-					<br>
-					<table>
-						<tr>
-							<td>
-								<button id="tap">Tap</button>
-							</td>
-							<td>
-								<button id="metronomstart"><i id="imageForPlayButton" class="fa fa-play fa-2x"></i></button>
-							</td>
-						</tr>
-					</table>
-					<br>
-					<label for="speed">BPM</label>
-					<input class="none" type="range" min="20" max="300" value="120" id="bpmSlider" step="1" style="width:100%;">
-					<br>
+					<center>
+						<button id="buttonup" style="margin-right:1em;"><i class="fa fa-angle-up fa-2x"></i></button>
+						<button id="buttonup10"><i class="fa fa-angle-double-up fa-2x"></i></button>
+						<br>
+						<br>
+						<p style="display: inline; margin-right:1em;">BPM:</p><p id="bpmdisplay" style="text-align: center; display: inline"></p>
+						<br>
+						<br>
+						<button id="buttondown" style="margin-right:1em;"><i class="fa fa-angle-down fa-2x"></i></button>
+						<button id="buttondown10"><i class="fa  fa-angle-double-down fa-2x"></i></button>
+						<br>
+						<hr>
+						<button id="tap" style="margin-right:1em;"><i class="fa fa-2x">Tap</i></button>
+						<button id="metronomstart"><i id="imageForPlayButton"      class="fa fa-play fa-2x"></i></button>
+					</center>
 					<label for="speed">Volume</label>
 					<input class="none" type="range" min="0" max="1" value="0.5" id="volumeSlider" step="0.1" style="width:100%;">
 					<br>
 					<label for="length">Length</label>
 					<input type="number" id="length" name="amount" value="1" min="1" max="10" style="width:4em">
-					<hr>
+					<hr>  
 					<label class="switch">
 						<input type="checkbox" id="advanced">
 						<span class="slider round"></span>
 					</label>
-					<label for="hardcore">advanced</label>
+					<label for="hardcore">Random pause</label>
 					<br>
 					<br>
-					<label for="playFor">Play for</label>
-					<input type="number" id="playFor" name="amount" value="1" min="1" max="500" style="width:4em">
-					<br>
-					<br>
-					<label for="pauseFor">Pause for</label>
-					<input type="number" id="pauseFor" name="amount" value="1" min="1" max="500" style="width:4em">
-					</fieldset>
-					</div>
-					<div id="out">
-						<center>
-							<div id="output" class="section-to-print"></div>
-						</center>
-					</div>
+
+					
+						<hr>
+						<label class="switch">
+							<input type="checkbox" id="advanced">
+							<span class="slider round"></span>
+						</label>
+					
+						<label for="hardcore">advanced</label>
+						<br>
+						<br>
+						<label for="playFor">Play for</label>
+						<input type="number" id="playFor" name="amount" value="1" min="1" max="500" style="width:4em">
+						<br>
+						<br>
+						<label for="pauseFor">Pause for</label>
+						<input type="number" id="pauseFor" name="amount" value="1" min="1" max="500" style="width:4em">
+
+				</fieldset>
+			</div>
+		<div id="out">
+			<center>
+				<div id="output" class="section-to-print"></div>
+			</center>
+		</div>
 		</content>
 		<footer>
 			<hr>

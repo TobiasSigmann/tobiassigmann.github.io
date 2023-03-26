@@ -1,7 +1,7 @@
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-function Metronom(startbpm, ) {
-    this.timer = new Timer(60000 / startbpm);
+function Metronom() {
+    this.timer = new Timer(60000 / 150);
     this.countPlayed = 0;
     this.length = length
     this.playForAmount = 4
@@ -17,13 +17,16 @@ function Metronom(startbpm, ) {
 
 
     this.playSound = () => {
-        this.play(this.countPlayed == 0)
-        
         this.countPlayed++
         if (this.countPlayed == this.length) {
             this.countPlayed = 0
             this.taktcounter++
         }
+
+        console.log(this.countPlayed)
+        this.play(this.countPlayed == 1)
+        
+      
     }
 
     this.play = (highOrLow) => {
