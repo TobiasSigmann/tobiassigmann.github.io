@@ -83,6 +83,8 @@ const buttonUp = document.getElementById("buttonup")
 const buttonDown = document.getElementById("buttondown")
 const buttonUp10 = document.getElementById("buttonup10")
 const buttonDown10 = document.getElementById("buttondown10")
+const randomPauseCheckbox = document.getElementById("randompause")
+const randomPauseMaxLengthInput = document.getElementById("maxlength")
 const metronom = new Metronom()
 
 //---- set start condition ----
@@ -98,6 +100,19 @@ lengthInput.value = length
 metronom.updateLength(length)
 localStorage.setItem("length", length);
 
+var maxlength = parseInt(localStorage.getItem("maxlength"));
+if (maxlength == null) maxlength = 1
+randomPauseMaxLengthInput.value = maxlength
+metronom.updateRandomMaxLength(maxlength)
+localStorage.setItem("maxlength", maxlength);
+
+var randomPauseActive = localStorage.getItem("randomPauseActive") == "false";
+if (randomPauseActive == null) randomPauseActive = false
+randomPauseCheckbox.checked = randomPauseActive
+metronom.activateRandomPause(maxlength)
+localStorage.setItem("randomPauseActive", randomPauseActive);
+
+/*
 var advanced = localStorage.getItem("advanced") == 'true';
 if (advanced == null) advanced = false
 advancedEnabledCB.checked = advanced
@@ -116,7 +131,7 @@ var pauseFor = localStorage.getItem("pauseFor");
 if (pauseFor == null) pauseFor = 1
 pauseForInput.value = pauseFor
 metronom.pauseFor(pauseFor)
-localStorage.setItem("pauseFor", pauseFor);
+localStorage.setItem("pauseFor", pauseFor);*/
 
 var volume = localStorage.getItem("volume");
 if (volume == null) volume = 0.5
@@ -125,6 +140,13 @@ metronom.setVolume(volume)
 localStorage.setItem("volume", volume);
 
 //---- action handler ---
+randomPauseMaxLengthInput.oninput = function () {
+    var maxlength = this.value
+    metronom.updateRandomMaxLength(maxlength)
+    localStorage.setItem("maxlength", maxlength);
+}
+
+
 buttonUp.onclick = function () {
     bpm += 1
     if (bpm > 300) bpm = 300
@@ -162,7 +184,7 @@ lengthInput.oninput = function () {
     localStorage.setItem("length", length);
     metronom.updateLength(length)
 }
-
+/**
 playForInput.oninput = function () {
     playFor = this.value
     localStorage.setItem("playFor", playFor);
@@ -181,7 +203,7 @@ advancedEnabledCB.onclick = function () {
     playForInput.disabled = !advanced
     pauseForInput.disabled = !advanced
     metronom.enableAdvanced(advanced)
-}
+}*/
 
 metronomStatusButton.onclick = function toggleMetronom() {
     var state = metronom.contolState()
