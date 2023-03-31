@@ -35,12 +35,11 @@ function Metronom() {
             this.taktcounter++
         }
 
-        if (this.advancedEnable) {
+        if (this.fixedPauseEnabled) {
             this.playWithFixedPause(this.countPlayed == 1)
         } else if (this.rendomPauses) {
             this.playWithRandomPause(this.countPlayed == 1)
         } else {
-            this.makeNoice = true
             this.play(this.countPlayed == 1)
         }
     }
@@ -49,12 +48,12 @@ function Metronom() {
         if (this.makeNoice) {
             this.play(highOrLow)
 
-            if (this.taktcounter == this.playForAmount && this.pauseForAmount > 0) {
+            if (this.taktcounter >= this.playForAmount && this.pauseForAmount > 0) {
                 this.taktcounter = 0;
                 this.makeNoice = !this.makeNoice
             }
         } else {
-            if (this.taktcounter == this.pauseForAmount && this.playForAmount > 0) {
+            if (this.taktcounter >= this.pauseForAmount && this.playForAmount > 0) {
                 this.taktcounter = 0;
                 this.makeNoice = !this.makeNoice
             }
@@ -64,7 +63,6 @@ function Metronom() {
     this.playWithRandomPause = (highOrLow) => {
         if (this.randomstate == 0) {
             //play through the begin of the next
-            console.log("heir")
             this.play(highOrLow)
             if (this.countPlayed == (this.length - 1)) {
                 this.randomstate++;
@@ -80,7 +78,6 @@ function Metronom() {
             //generate raondom play
             var rand = Math.random()
             this.play(highOrLow)
-            console.log("rand", rand, (this.rendomPausesMaxLength + 1))
             this.rondomPauseFor = Math.floor(rand * (this.rendomPausesMaxLength + 1));
             this.randomstate++;
             this.playWithRandomPause(highOrLow)
@@ -92,7 +89,6 @@ function Metronom() {
         } else if (this.randomstate == 4) {
             //generate raondom
             var rand = Math.random()
-            console.log("rand", rand, (this.rendomPausesMaxLength + 1))
             this.rondomPauseFor = Math.floor(rand * (this.rendomPausesMaxLength + 1));
             this.randomstate++;
             this.playWithRandomPause(highOrLow)
@@ -125,7 +121,6 @@ function Metronom() {
 
 
     this.updateMetronomspeed = (bpm) => {
-        console.log("set bpm", bpm)
         this.timer.timeInterval = 60000 / bpm;
     }
 
@@ -156,7 +151,8 @@ function Metronom() {
     }
 
     this.enableAdvanced = (enable) => {
-        this.fixedPauseEnabled = !enable
+
+        this.fixedPauseEnabled = enable
     }
 
     this.setVolume = (volume) => {
