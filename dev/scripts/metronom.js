@@ -26,8 +26,6 @@ function Metronom() {
     this.taktcounter = 0
     this.makeNoice = true
 
-
-
     this.playSound = () => {
         this.countPlayed++
         if (this.countPlayed == this.length) {

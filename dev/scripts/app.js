@@ -1,27 +1,57 @@
-function getStoredValueForInputInt(storageName, defaultVlaue, input) {
+function getStoredValueForInputInt(storageName, minValue, defaultVlaue, maxValue, inputElement, callback) {
     var value = parseInt(localStorage.getItem(storageName));
     if (value == null || isNaN(value)) value = defaultVlaue
+    if (value < minValue) value = minValue
+    if (value > maxValue) value = maxValue
     localStorage.setItem(storageName, value);
 
-    input.value = value
+    inputElement.value = value
+    inputElement.onchange = function () {
+        let value = this.value
+        if (value < minValue) value = minValue
+        if (value > maxValue) value = maxValue
+
+        console.log(storageName, "->", value)
+        localStorage.setItem(storageName, value);
+        callback(value);
+    };
+
     return value
 }
 
-function getStoredValueForInputFloat(storageName, defaultVlaue, input) {
+function getStoredValueForInputFloat(storageName, minValue, defaultVlaue, maxValue, inputElement, callback) {
     var value = parseFloat(localStorage.getItem(storageName));
     if (value == null || isNaN(value)) value = defaultVlaue
+    if (value < minValue) value = minValue
+    if (value > maxValue) value = maxValue
     localStorage.setItem(storageName, value);
 
-    input.value = value
+    inputElement.value = value
+    inputElement.onchange = function () {
+        let value = this.value
+        if (value < minValue) value = minValue
+        if (value > maxValue) value = maxValue
+
+        console.log(storageName, "->", value)
+        localStorage.setItem(storageName, value);
+        callback(value);
+    };
+
     return value
 }
 
-function getStoredValueForCheckBox(storageName, defaultVlaue, input) {
+function getStoredValueForCheckBox(storageName, defaultVlaue, inputElement, callback) {
     var value = localStorage.getItem(storageName) == "true";
     if (value == null) value = defaultVlaue
     localStorage.setItem(storageName, value);
 
-    input.checked = value
+    inputElement.checked = value
+    inputElement.onchange = function () {
+        console.log(storageName, "->", this.checked)
+        localStorage.setItem(storageName, this.checked);
+        callback(this.checked);
+    };
+
     return value
 }
 
@@ -35,38 +65,51 @@ function getStoredIntValueForHTML(storageName, defaultVlaue, input) {
 }
 
 //###################################  Exercise control ###################################
+const generator = new Generator()
+
 const fisRB = document.getElementById("fis")
 fisRB.onchange = function () {
-    createNewContent();
+    if (this.checked) {
+        generator.setMode(0)
+        generator.createNewContent();
+    }
 };
 
 const gesRB = document.getElementById("ges")
 gesRB.onchange = function () {
-    createNewContent();
+    if (this.checked) {
+        generator.setMode(1)
+        generator.createNewContent();
+    }
 };
 
 const bothRB = document.getElementById("both")
 bothRB.onchange = function () {
-    createNewContent();
+    if (this.checked) {
+        generator.setMode(2)
+        generator.createNewContent();
+    }
 };
 
 const hardcoreModeCB = document.getElementById("hardcore")
-getStoredValueForCheckBox("hardCoreModeActive", false, hardcoreModeCB)
-hardcoreModeCB.onchange = function () {
-    createNewContent();
-    localStorage.setItem("hardCoreModeActive", this.checked);
-};
+getStoredValueForCheckBox("hardCoreModeActive", false, hardcoreModeCB,
+    function (value) {
+        generator.setHardcore(value)
+        generator.createNewContent();
+    }
+)
 
 const amountInput = document.getElementById("amount")
-getStoredValueForInputInt("amount", 1, amountInput)
-amountInput.onchange = function () {
-    localStorage.setItem("amount", amountInput.value);
-    createNewContent();
-};
+getStoredValueForInputInt("amount", 1, 1, 500, amountInput,
+    function (value) {
+        generator.setAmount(value)
+        generator.createNewContent();
+    }
+);
 
 const updateButton = document.getElementById("create")
 updateButton.onclick = function () {
-    createNewContent()
+    generator.createNewContent()
 };
 
 const fileDownloadButton = document.getElementById("download")
@@ -79,20 +122,20 @@ const output = document.getElementById("output")
 
 //################################### view control ###################################
 const fontSizeInput = document.getElementById("fontsizeChanger")
-var fontSize = getStoredValueForInputInt("fontsize", 25, fontSizeInput)
-fontSizeInput.oninput = function () {
-    fontSize = this.value
-    localStorage.setItem("fontsize", fontSize);
-    changefontSize()
-}
+var fontSize = getStoredValueForInputInt("fontsize", 10, 25, 80, fontSizeInput,
+    function (value) {
+        fontSize = value
+        changefontSize()
+    }
+)
 
 const darkModeButton = document.getElementById("darkModeButton")
-let darkMode = getStoredValueForCheckBox("darkMode", false, darkModeButton)
+let darkMode = getStoredValueForCheckBox("darkMode", false, darkModeButton,
+    function (value) {
+        toggleDarkMode(value)
+    }
+)
 toggleDarkMode(darkMode)
-darkModeButton.onclick = function () {
-    toggleDarkMode(darkModeButton.checked)
-    localStorage.setItem("darkMode", darkModeButton.checked);
-};
 
 //################################### metronom ###################################
 const metronom = new Metronom()
@@ -148,7 +191,6 @@ tabButton.onclick = function toggleMetronom() {
 
     if (bpmFromTap > 19 && bpmFromTap < 301) {
         bpm = bpmFromTap
-        localStorage.setItem("bpm", bpmFromTap);
         document.getElementById("bpmdisplay").innerText = bpmFromTap
         metronom.updateMetronomspeed(bpmFromTap)
     }
@@ -168,62 +210,56 @@ metronomStatusButton.onclick = function toggleMetronom() {
 }
 
 const volumeSlider = document.getElementById("volumeSlider")
-var volume = getStoredValueForInputFloat("metronomVolume", 0.5, volumeSlider)
+var volume = getStoredValueForInputFloat("metronomVolume", 0, 0.5, 1, volumeSlider,
+    function (value) {
+        metronom.setVolume(value)
+    }
+)
 metronom.setVolume(volume)
-volumeSlider.oninput = function () {
-    volume = this.value
-    localStorage.setItem("metronomVolume", volume);
-    metronom.setVolume(volume)
-}
 
 const lengthInput = document.getElementById("length")
-var length = getStoredValueForInputInt("length", 4, lengthInput)
+var length = getStoredValueForInputInt("length", 1, 4, 100, lengthInput,
+    function (value) {
+        metronom.updateLength(value)
+    }
+)
 metronom.updateLength(length)
-lengthInput.oninput = function () {
-    length = this.value
-    localStorage.setItem("length", length);
-    metronom.updateLength(length)
-}
-
 
 const randomPauseMaxLengthInput = document.getElementById("maxlength")
-var maxLength = getStoredValueForInputInt("maxlength", 2, randomPauseMaxLengthInput)
+var maxLength = getStoredValueForInputInt("maxlength", 1, 2, 100, randomPauseMaxLengthInput,
+    function (value) {
+        metronom.updateRandomMaxLength(value)
+    }
+)
 metronom.updateRandomMaxLength(maxLength)
-randomPauseMaxLengthInput.oninput = function () {
-    metronom.updateRandomMaxLength(this.value)
-    localStorage.setItem("maxlength", this.value);
-}
 
 const randomPauseCheckbox = document.getElementById("randomPauseActivated")
-var randompauseActive = getStoredValueForCheckBox("randomPauseActivated", false, randomPauseCheckbox)
+var randompauseActive = getStoredValueForCheckBox("randomPauseActivated", false, randomPauseCheckbox,
+    function (value) {
+        metronom.activateRandomPause(value)
+        randomPauseMaxLengthInput.disabled = !value
+    }
+)
 metronom.activateRandomPause(randompauseActive)
 randomPauseMaxLengthInput.disabled = !randompauseActive
-randomPauseCheckbox.onchange = function () {
-    metronom.activateRandomPause(this.checked)
-    randomPauseMaxLengthInput.disabled = !this.checked
-    localStorage.setItem("randomPauseActivated", this.checked);
-};
-
 
 
 /* 
 const playForInput = document.getElementById("playFor")
-var playFor = getStoredValueForInputInt("playFor", 4, playForInput)
+var playFor = getStoredValueForInputInt("playFor", 1, 4, 100, playForInput,
+    function (value) {
+        metronom.playFor(value)
+    }
+)
 metronom.playFor(playFor)
-playForInput.oninput = function () {
-    playFor = this.value
-    localStorage.setItem("playFor", playFor);
-    metronom.playFor(length)
-}
 
 const pauseForInput = document.getElementById("pauseFor")
-var pauseFor = getStoredValueForInputInt("pauseFor", 1, pauseForInput)
+var pauseFor = getStoredValueForInputInt("pauseFor", 1, 1, 100 pauseForInput,
+    function (value) {
+        metronom.pauseFor(value)
+    }
+)
 metronom.pauseFor(pauseFor)
-pauseForInput.oninput = function () {
-    pauseFor = this.value
-    localStorage.setItem("pauseFor", pauseFor);
-    metronom.pauseFor(length)
-}
 
 const advancedEnabledCB = document.getElementById("advanced")
 var advacedMetronom = getStoredValueForCheckBox("advanced", false, advancedEnabledCB)
@@ -232,7 +268,6 @@ pauseForInput.disabled = !advacedMetronom
 metronom.enableAdvanced(advacedMetronom)
 advancedEnabledCB.onclick = function () {
     advanced = this.checked
-    localStorage.setItem("advanced", advanced);
     playForInput.disabled = !advanced
     pauseForInput.disabled = !advanced
     metronom.enableAdvanced(advanced)
