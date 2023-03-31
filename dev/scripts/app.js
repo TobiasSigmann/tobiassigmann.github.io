@@ -41,8 +41,9 @@ function getStoredValueForInputFloat(storageName, minValue, defaultVlaue, maxVal
 }
 
 function getStoredValueForCheckBox(storageName, defaultVlaue, inputElement, callback) {
-    var value = localStorage.getItem(storageName) == "true";
-    if (value == null) value = defaultVlaue
+    var valueString = localStorage.getItem(storageName);
+    var value = valueString == "true"
+    if (valueString == null) value = defaultVlaue
     localStorage.setItem(storageName, value);
 
     inputElement.checked = value
@@ -68,28 +69,37 @@ function getStoredIntValueForHTML(storageName, defaultVlaue, input) {
 const generator = new Generator()
 
 const fisRB = document.getElementById("fis")
-fisRB.onchange = function () {
-    if (this.checked) {
-        generator.setMode(0)
-        generator.createNewContent();
+var fisChecked = getStoredValueForCheckBox("fis", true, fisRB,
+    function (value) {
+        if (value) {
+            generator.setMode(0)
+            generator.createNewContent();
+        }
     }
-};
+)
+fisRB.checked = fisChecked
 
 const gesRB = document.getElementById("ges")
-gesRB.onchange = function () {
-    if (this.checked) {
-        generator.setMode(1)
-        generator.createNewContent();
+var gesChecked = getStoredValueForCheckBox("ges", false, gesRB,
+    function (value) {
+        if (value) {
+            generator.setMode(1)
+            generator.createNewContent();
+        }
     }
-};
+)
+gesRB.checked = gesChecked
 
 const bothRB = document.getElementById("both")
-bothRB.onchange = function () {
-    if (this.checked) {
-        generator.setMode(2)
-        generator.createNewContent();
+var bothChecked = getStoredValueForCheckBox("both", false, bothRB,
+    function (value) {
+        if (value) {
+            generator.setMode(2)
+            generator.createNewContent();
+        }
     }
-};
+)
+bothRB.checked = bothChecked
 
 const hardcoreModeCB = document.getElementById("hardcore")
 getStoredValueForCheckBox("hardCoreModeActive", false, hardcoreModeCB,
@@ -242,7 +252,6 @@ var randompauseActive = getStoredValueForCheckBox("randomPauseActivated", false,
 )
 metronom.activateRandomPause(randompauseActive)
 randomPauseMaxLengthInput.disabled = !randompauseActive
-
 
 /* 
 const playForInput = document.getElementById("playFor")
